@@ -1,6 +1,6 @@
 {
 	"name": "@bsmth/loader-progress",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Internal progress UI for @bsmth webpack loaders.",
 	"main": "dist/cjs/tracker.js",
 	"module": "dist/esm/tracker.js",
