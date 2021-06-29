@@ -7,6 +7,8 @@ type Job = {
 	text: string;
 };
 
+export type LogLevel = 'pretty' | 'simple' | 'off';
+
 
 const jobs: Job[] = [];
 let jobCount = 0;
@@ -66,6 +68,13 @@ function onJobUpdate() {
 }
 
 
+let logLevel: LogLevel = 'pretty';
+
+export function setLogLevel( level: LogLevel ): void {
+	logLevel = level;
+}
+
+
 function completeJob( job: Job ): void {
 	if ( jobs.includes( job ) ) {
 		jobs.splice( jobs.findIndex( ( j ) => j === job ), 1 );
@@ -76,11 +85,21 @@ function completeJob( job: Job ): void {
 
 
 export function trackJob( job: Job ): () => void {
-	if ( !jobs.includes( job ) ) {
-		jobs.push( job );
-		jobCount += 1;
-		onJobUpdate();
+	if ( logLevel === 'pretty' ) {
+		if ( !jobs.includes( job ) ) {
+			jobs.push( job );
+			jobCount += 1;
+			onJobUpdate();
+		}
+
+		return () => completeJob( job );
 	}
 
-	return () => completeJob(job);
+	if ( logLevel === 'simple' ) {
+		// eslint-disable-next-line no-console
+		console.log( `${chalk.reset( job.text )} ${chalk.gray( job.reportName )}` );
+	}
+
+	return () => {};
 }
+
